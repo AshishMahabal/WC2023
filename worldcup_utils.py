@@ -141,7 +141,7 @@ def generate_standings_and_plot(df):
     
     # Sort based on points and then NRR
     sorted_team_data = sorted(team_data, key=lambda x: (x[1], x[2]), reverse=True)
-    st.write(sorted_team_data)
+#    st.write(sorted_team_data)
 
     # Extract the sorted values
     countries_sorted = [data[0] for data in sorted_team_data]
