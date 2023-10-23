@@ -86,26 +86,6 @@ def order_teams_by_points_and_nrr(filename, countries):
     
     return combined
 
-def get_team_points(df, countries):
-    points_dict = {}
-    
-    for country in countries:
-        wins = len(df[df['Result'] == country])
-        draws_or_ties = len(df[(df['Result'] == 'draw') | (df['Result'] == 'tie')])
-        
-        # Assigning points: 2 for a win, 1 for a draw or tie
-        points_dict[country] = 2 * wins
-        
-        # If the country was involved in a draw or tie, add 1 point to it
-        if country in df['Bat1'].values or country in df['Bat2'].values:
-            points_dict[country] += draws_or_ties
-
-    # Ensure every country has at least a default value
-    for country in countries:
-        points_dict.setdefault(country, 0)
-        
-    return points_dict
-
 def get_matches_played(df):
     matches_played = {}
     for team in set(df["Bat1"].tolist() + df["Bat2"].tolist()):
@@ -150,7 +130,7 @@ def generate_standings_and_plot(df):
     countries = ["Aus", "Eng", "SA", "NZ", "Pak", "Ind", "SL", "Ban", "Afg", "Ned"]
 
     # Get the points, NRR, and matches played for each country
-    points_dict = get_team_points(df, countries)
+    points_dict = calculate_points(df, countries)
     nrr_dict = calculate_nrr(df, countries)
     print(nrr_dict)
     matches_played_dict = get_matches_played(df)
@@ -161,6 +141,7 @@ def generate_standings_and_plot(df):
     
     # Sort based on points and then NRR
     sorted_team_data = sorted(team_data, key=lambda x: (x[1], x[2]), reverse=True)
+    st.write(sorted_team_data)
 
     # Extract the sorted values
     countries_sorted = [data[0] for data in sorted_team_data]
@@ -261,7 +242,8 @@ def plot_matrix_chart(matrix, countries, points, nrr, data):
                         verticalalignment='center', color='black')
 
     plt.title("Head-to-Head Match Results", fontsize=16)
-    plt.show()
+    st.pyplot(plt.gcf()) 
+#    plt.show()
 
 # Function to add a line for a match result
 def add_line(result, ax, countries, angles):
@@ -302,7 +284,7 @@ def plot_decagon(df):
     countries = ["Ind", "Aus", "NZ", "SL", "Ban", "Pak", "Eng", "SA", "Ned", "Afg"]
     
     # Get the points, NRR, and matches played for each country
-    points_dict = get_team_points(df, countries)
+    points_dict = calculate_points(df, countries)
     nrr_dict = calculate_nrr(df, countries)
     print(nrr_dict)
     matches_played_dict = get_matches_played(df)

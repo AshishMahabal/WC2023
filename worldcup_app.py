@@ -1,7 +1,7 @@
 import streamlit as st
 from worldcup_utils import (load_data, plot_matrix_chart, generate_match_results,
                             order_teams_by_points_and_nrr, get_index_for_preselection,
-                            get_team_points, calculate_nrr, 
+                            calculate_points, calculate_nrr, 
                             generate_results_matrix, generate_standings_and_plot,
                             get_country_data, plot_country_graph,
                             get_victory_margin,add_line, plot_decagon)
@@ -9,12 +9,6 @@ from worldcup_utils import (load_data, plot_matrix_chart, generate_match_results
 def main(df, countries):
     st.title('World Cup 2023 Results')
     st.write('Choose options to see desired details')
-    
-    # Sidebar
-    #st.sidebar.header('Options')
-    # Add more options and widgets if needed
-
-
     
     choice = st.radio(
         "Choose a view:",
@@ -70,14 +64,14 @@ def main(df, countries):
     # Compute matrix
 #    team_points, team_nrr = compute_team_metrics(data, countries)
     # Get points and NRR for sorting
-    team_points = get_team_points(df, countries)
+    team_points = calculate_points(df, countries)
     team_nrr = calculate_nrr(df, countries)
     sorted_countries = sorted(countries, key=lambda x: (team_points[x], team_nrr[x]), reverse=True)
 #    matrix = create_match_matrix(data, sorted_countries)
     results_matrix = generate_results_matrix(df, sorted_countries)
     
     # Plot matrix chart
-    plot_matrix_chart(results_matrix, sorted_countries, team_points, team_nrr, df)
+    #plot_matrix_chart(results_matrix, sorted_countries, team_points, team_nrr, df)
     
     # Any other visualizations or features can be added here...
 
