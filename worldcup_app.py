@@ -20,7 +20,7 @@ def main(df, countries):
         st.write("Overall statistics go here.")
 
         # Create a row with three columns
-        col1, col2, col3 = st.columns(3)
+        col1, col2, col3, col4 = st.columns(4)
         # Place a checkbox in each column
         with col1:
             checkbox1 = st.checkbox("Standings and Victories", value=True)
@@ -28,6 +28,8 @@ def main(df, countries):
             checkbox2 = st.checkbox("Standings (sorted)")
         with col3:
             checkbox3 = st.checkbox("Per match details")
+        with col4:
+            checkbox4 = st.checkbox("Head to Head")
 
         if checkbox1:
             st.write('Who beat whom')
@@ -41,6 +43,10 @@ def main(df, countries):
         if checkbox3:
             st.write('Per match details')
             st.write(df)
+
+        if checkbox4:
+            st.write('Head to Head')
+            plot_matrix_chart(results_matrix, sorted_countries, team_points, team_nrr, df)
 
     elif choice == "Per Country Analysis":
         # Create a row with columns
@@ -64,11 +70,11 @@ def main(df, countries):
     # Compute matrix
 #    team_points, team_nrr = compute_team_metrics(data, countries)
     # Get points and NRR for sorting
-    team_points = calculate_points(df, countries)
-    team_nrr = calculate_nrr(df, countries)
-    sorted_countries = sorted(countries, key=lambda x: (team_points[x], team_nrr[x]), reverse=True)
+    #team_points = calculate_points(df, countries)
+    #team_nrr = calculate_nrr(df, countries)
+    #sorted_countries = sorted(countries, key=lambda x: (team_points[x], team_nrr[x]), reverse=True)
 #    matrix = create_match_matrix(data, sorted_countries)
-    results_matrix = generate_results_matrix(df, sorted_countries)
+#    results_matrix = generate_results_matrix(df, sorted_countries)
     
     # Plot matrix chart
     #plot_matrix_chart(results_matrix, sorted_countries, team_points, team_nrr, df)
@@ -95,5 +101,9 @@ if __name__ == '__main__':
 #    generate_standings_and_plot(df)
 #    data = load_data()
     countries = ["Ind", "Aus", "NZ", "SL", "Ban", "Pak", "Eng", "SA", "Ned", "Afg"]
+    team_points = calculate_points(df, countries)
+    team_nrr = calculate_nrr(df, countries)
+    sorted_countries = sorted(countries, key=lambda x: (team_points[x], team_nrr[x]), reverse=True)
+    results_matrix = generate_results_matrix(df, sorted_countries)
     main(df, countries)
 

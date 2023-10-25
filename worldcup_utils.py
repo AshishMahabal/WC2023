@@ -193,13 +193,13 @@ def get_victory_margin(data, team1, team2):
             return f"by {10 - match_data['wickets2']} wickets"
     elif match_data['Result'] == team2:
         if match_data['Bat1'] == team2:
-            return f"by {match_data['Target'] - match_data['Runs1']} runs"
+            return f"by {match_data['Target'] - match_data['Runs2']} runs"
         else:
-            return f"by {10 - match_data['wickets1']} wickets"
+            return f"by {10 - match_data['wickets2']} wickets"
     else:
         return None
 
-def plot_matrix_chart(matrix, countries, points, nrr, data):
+def plot_matrix_chart(matrix, countries, team_points, nrr, data):
     plt.figure(figsize=(12, 12))
     
     # Define custom colormap for off-diagonal elements
@@ -208,12 +208,15 @@ def plot_matrix_chart(matrix, countries, points, nrr, data):
     
     # Plot heatmap with modified colormap
     ax = sns.heatmap(matrix, cmap=cm, cbar=False, xticklabels=countries, yticklabels=countries, 
-                     linewidths=.5, linecolor='black', annot=True)
+                 linewidths=.5, linecolor='white', annot=False)
+
+    # Move x-labels to the top
+    ax.xaxis.tick_top() 
     
     # Custom annotations and box resizing
     for i in range(len(countries)):
         for j in range(len(countries)):
-            value = matrix[i, j]
+            #value = matrix[i, j]
             margin = get_victory_margin(data, countries[i], countries[j])
             
             # Diagonal cells
@@ -221,27 +224,28 @@ def plot_matrix_chart(matrix, countries, points, nrr, data):
                 color = "white"  # Default text color
                 if i < 4:
                     cell_color = "blue"
+                    color = "white"
                 elif i < 7:
                     cell_color = "yellow"
                     color = "black"  # Adjust text color for better visibility on yellow
                 else:
                     cell_color = "red"
                 ax.add_patch(plt.Rectangle((j, i), 1, 1, fill=True, color=cell_color))
-                ax.text(j+0.5, i+0.5, f"{int(value)} ({nrr[countries[i]]:.2f})", 
-                        horizontalalignment='center', verticalalignment='center', color=color)
+                ax.text(j+0.5, i+0.5, f"{int(team_points[countries[i]])} ({nrr[countries[i]]:.2f})", 
+                       horizontalalignment='center', verticalalignment='center', color=color)
 
             # Off-diagonal cells
             else:
                 text = ""
-                if not np.isnan(value):
+                if not np.isnan(team_points[countries[i]]):
                     # ... (rest of the color adjustments as before)
-                    text = f"{int(value)}"
+                    #text = f"{int(team_points[countries[i]])}"
                     if margin:
                         text += f"\n({margin})"
                 ax.text(j+0.5, i+0.5, text, horizontalalignment='center', 
                         verticalalignment='center', color='black')
 
-    plt.title("Head-to-Head Match Results", fontsize=16)
+    plt.title("Head-to-Head Results (%d matches)" % len(data), fontsize=16)
     st.pyplot(plt.gcf()) 
 #    plt.show()
 
