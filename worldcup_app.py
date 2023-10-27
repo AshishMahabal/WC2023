@@ -3,7 +3,8 @@ from worldcup_utils import (load_data, plot_matrix_chart, generate_match_results
                             order_teams_by_points_and_nrr, get_index_for_preselection,
                             calculate_points, calculate_nrr, 
                             generate_results_matrix, generate_standings_and_plot,
-                            get_country_data, plot_country_graph,
+                            get_country_details,plot_country_barchart,
+                            get_country_data, plot_country_graph, 
                             get_victory_margin,add_line, plot_decagon)
 
 def main(df, countries):
@@ -66,7 +67,8 @@ def main(df, countries):
         if checkbox12:
             st.write('Who beat whom')
             plot_country_graph(selected_country, country_specific_df, countries)
-    
+            plot_country_barchart(df, selected_country)
+        
     # Compute matrix
 #    team_points, team_nrr = compute_team_metrics(data, countries)
     # Get points and NRR for sorting

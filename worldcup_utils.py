@@ -1,4 +1,6 @@
 # worldcup_utils.py
+from asyncio import selector_events
+import select
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -6,6 +8,7 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 import seaborn as sns
 import networkx as nx
+import matplotlib.patches as mpatches
 
 # ... All your previously discussed functions go here ...
 
@@ -97,7 +100,7 @@ def plot_bubble_chart(teams, points, nrr, matches_played):
     plt.figure(figsize=(12, 8))
     sns.set_style("whitegrid")
     #st.write(nrr)
-    print(matches_played)
+    st.write(matches_played)
 
     # Create a custom colormap for NRR - bluer for positive and redder for negative
     cmap = plt.cm.get_cmap('coolwarm_r')
@@ -188,14 +191,14 @@ def get_victory_margin(data, team1, team2):
     
     if match_data['Result'] == team1:
         if match_data['Bat1'] == team1:
-            return f"by {match_data['Target'] - match_data['Runs2']} runs"
+            return f"{match_data['Target'] - match_data['Runs2']} runs"
         else:
-            return f"by {10 - match_data['wickets2']} wickets"
+            return f"{10 - match_data['wickets2']} wkts"
     elif match_data['Result'] == team2:
         if match_data['Bat1'] == team2:
-            return f"by {match_data['Target'] - match_data['Runs2']} runs"
+            return f"{match_data['Target'] - match_data['Runs2']} runs"
         else:
-            return f"by {10 - match_data['wickets2']} wickets"
+            return f"{10 - match_data['wickets2']} wkts"
     else:
         return None
 
@@ -203,7 +206,7 @@ def plot_matrix_chart(matrix, countries, team_points, nrr, data):
     plt.figure(figsize=(12, 12))
     
     # Define custom colormap for off-diagonal elements
-    colors = [(0.8, 0.8, 0.8), (1, 0, 0), (1, 1, 0), (0, 0, 1)]  # gray -> red -> yellow -> blue
+    colors = [(0.8, 0.8, 0.8), (1, 0, 0), (0, 1, 1), (1, 0, 1)]  # gray -> red -> yellow -> blue
     cm = LinearSegmentedColormap.from_list("custom_div_cmap", colors, N=4)
     
     # Plot heatmap with modified colormap
@@ -230,7 +233,8 @@ def plot_matrix_chart(matrix, countries, team_points, nrr, data):
                     color = "black"  # Adjust text color for better visibility on yellow
                 else:
                     cell_color = "red"
-                ax.add_patch(plt.Rectangle((j, i), 1, 1, fill=True, color=cell_color))
+                #ax.add_patch(plt.Rectangle((j, i), 1,1, fill=True, color=cell_color))
+                ax.add_patch(plt.Circle((j+0.5, i+0.5), 0.5, fill=True, color=cell_color))
                 ax.text(j+0.5, i+0.5, f"{int(team_points[countries[i]])} ({nrr[countries[i]]:.2f})", 
                        horizontalalignment='center', verticalalignment='center', color=color)
 
@@ -413,3 +417,127 @@ def get_index_for_preselection(items, item_name):
 
 #index_to_preselect = get_index_for_preselection(countries, 'Ind')
 
+def get_country_details(df, country):
+    country_df = df[(df['Bat1'] == country) | (df['Bat2'] == country)]
+    
+    # 1. Calculate match stats
+    wins = len(country_df[country_df['Result'] == country])
+    draws = len(country_df[country_df['Result'] == 'draw'])
+    ties = len(country_df[country_df['Result'] == 'tie'])
+    losses = len(country_df) - wins - draws - ties
+
+    st.write(f"Matches Played (Won: {wins} Lost: {losses} Drawn: {draws} Tied: {ties})")
+
+    # 2. Determine highest and lowest scores
+    runs_as_bat1 = country_df[country_df['Bat1'] == country]['Runs1']
+    runs_as_bat2 = country_df[country_df['Bat2'] == country]['Runs2']
+
+    wickets_as_bat1 = country_df[country_df['Bat1'] == country]['wickets1']
+    wickets_as_bat2 = country_df[country_df['Bat2'] == country]['wickets2']
+
+    overs_as_bat1 = country_df[country_df['Bat1'] == country]['Overs1']
+    overs_as_bat2 = country_df[country_df['Bat2'] == country]['Overs2']
+
+    all_runs = runs_as_bat1.tolist() + runs_as_bat2.tolist()
+    all_wickets = wickets_as_bat1.tolist() + wickets_as_bat2.tolist()
+    all_overs = overs_as_bat1.tolist() + overs_as_bat2.tolist()
+
+    idx_max = all_runs.index(max(all_runs))
+    idx_min = all_runs.index(min(all_runs))
+
+    st.write(f"Highest Score: {all_runs[idx_max]} in {all_overs[idx_max]} overs for {all_wickets[idx_max]} wickets")
+    st.write(f"Lowest Score: {all_runs[idx_min]} in {all_overs[idx_min]} overs for {all_wickets[idx_min]} wickets")
+
+    # 3. Total runs, overs, wickets
+    total_runs = sum(all_runs)
+    total_overs = sum(all_overs)
+    total_wickets = sum(all_wickets)
+    st.write(f"Total Runs: {total_runs} in {total_overs} overs losing {total_wickets} wickets")
+
+    # 4. Bar chart
+    plot_country_barchart(df,selector_events)
+    # opponent_teams = country_df['Bat2'].where(country_df['Bat1'] == country, country_df['Bat1']).tolist()
+    # colors = ['blue' if team == country else 'yellow' for team in opponent_teams]
+    # bars = plt.bar(opponent_teams, all_runs, color=colors)
+    # for idx, bar in enumerate(bars):
+    #     if all_wickets[idx] == 0:
+    #         plt.text(bar.get_x() + bar.get_width() / 2 - 0.15, bar.get_height(), "*", ha='center', color='black', fontsize=15)
+
+    # plt.ylabel('Runs')
+    # plt.title(f'Runs scored by {country}')
+    # plt.xticks(rotation=45)
+    # plt.tight_layout()
+    # #plt.show()
+    # st.pyplot(plt.gcf())
+
+def plot_country_barchart(df, country):
+    teams = []
+    runs = []
+    wickets = []
+    overs = []
+    winners = []
+    colors = []
+
+    for _, row in df.iterrows():
+        if country in [row['Bat1'], row['Bat2']]:
+            if row['Bat1'] == country:
+                teams.append(row['Bat2'])
+                runs.extend([row['Runs1'], row['Runs2']])
+                wickets.extend([row['wickets1'], row['wickets2']])
+                overs.extend([row['Overs1'], row['Overs2']])
+                colors.extend(['blue', 'black'])
+            else:
+                teams.append(row['Bat1'])
+                runs.extend([row['Runs1'], row['Runs2']])
+                wickets.extend([row['wickets1'], row['wickets2']])
+                overs.extend([row['Overs1'], row['Overs2']])
+                colors.extend(['black', 'blue'])
+            winners.append(row['Result'])
+
+    fig, ax = plt.subplots(figsize=(12, 6))
+
+    bar_width = 0.35
+    index = np.arange(len(teams))
+    
+    # Bar plot
+    bars = plt.bar(np.arange(len(runs)), runs, color=colors, alpha=0.8)
+    
+    for bar, wicket in zip(bars, wickets):
+        h = bar.get_height()
+        segments = h / wicket if wicket != 0 else h
+        for i in range(1, wicket):
+            plt.plot([bar.get_x(), bar.get_x() + bar.get_width()],
+                     [segments * i, segments * i], color="white")
+            
+
+    for i in range(len(teams)):
+        # ax.bar(index[i], runs[2*i], bar_width, color=colors[2*i], edgecolor='white', hatch='/' * wickets[2*i])
+        # ax.bar(index[i] + bar_width, runs[2*i + 1], bar_width, color=colors[2*i + 1], edgecolor='white', hatch='/' * wickets[2*i + 1])
+        # ax.text(index[i], runs[2*i] + 5, f"{overs[2*i]:.1f}", ha='center')
+        # ax.text(index[i] + bar_width, runs[2*i + 1] + 5, f"{overs[2*i + 1]:.1f}", ha='center')
+
+        # Place smileys
+        if winners[i] == country:
+            ax.text(index[i], runs[2*i] + 15, '😀', ha='center')
+        elif winners[i] != 'Draw' and winners[i] != 'Tie':
+            ax.text(index[i] + bar_width, runs[2*i + 1] + 15, '😀', ha='center')
+
+    ax.set_xlabel('Opposing Teams')
+    ax.set_ylabel('Runs')
+    ax.set_title(f'Matchwise Performance of {country}')
+    ax.set_xticks(index*2 + bar_width)
+    ax.set_xticklabels(teams)
+    #ax.legend([country, 'Opponents'], loc='upper left')
+    #ax.legend()
+    # Create patches for the legend
+    blue_patch = mpatches.Patch(color='blue', label=country)
+    black_patch = mpatches.Patch(color='black', label='Opponents')
+
+    # Pass these patches to the legend
+    ax.legend(handles=[blue_patch, black_patch], loc='upper left')
+
+    plt.tight_layout()
+    plt.grid(axis='y')
+    
+    # Assuming we are using Streamlit
+    st.pyplot(plt.gcf())
