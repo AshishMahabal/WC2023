@@ -100,7 +100,7 @@ def plot_bubble_chart(teams, points, nrr, matches_played):
     plt.figure(figsize=(12, 8))
     sns.set_style("whitegrid")
     #st.write(nrr)
-    st.write(matches_played)
+    #st.write(matches_played)
 
     # Create a custom colormap for NRR - bluer for positive and redder for negative
     cmap = plt.cm.get_cmap('coolwarm_r')
