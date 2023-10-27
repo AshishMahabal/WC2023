@@ -510,17 +510,17 @@ def plot_country_barchart(df, country):
                      [segments * i, segments * i], color="white")
             
 
-    for i in range(len(teams)):
+    #for i in range(len(teams)):
         # ax.bar(index[i], runs[2*i], bar_width, color=colors[2*i], edgecolor='white', hatch='/' * wickets[2*i])
         # ax.bar(index[i] + bar_width, runs[2*i + 1], bar_width, color=colors[2*i + 1], edgecolor='white', hatch='/' * wickets[2*i + 1])
         # ax.text(index[i], runs[2*i] + 5, f"{overs[2*i]:.1f}", ha='center')
         # ax.text(index[i] + bar_width, runs[2*i + 1] + 5, f"{overs[2*i + 1]:.1f}", ha='center')
 
-        # Place smileys
-        if winners[i] == country:
-            ax.text(index[i], runs[2*i] + 15, '😀', ha='center')
-        elif winners[i] != 'Draw' and winners[i] != 'Tie':
-            ax.text(index[i] + bar_width, runs[2*i + 1] + 15, '😀', ha='center')
+        # # Place smileys
+        # if winners[i] == country:
+        #     ax.text(index[i]*2, runs[2*i] + 15, '😀', ha='center')
+        # elif winners[i] != 'Draw' and winners[i] != 'Tie':
+        #     ax.text(index[i]*2 + bar_width, runs[2*i + 1] + 15, '😀', ha='center')
 
     ax.set_xlabel('Opposing Teams')
     ax.set_ylabel('Runs')
