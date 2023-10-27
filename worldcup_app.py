@@ -51,12 +51,14 @@ def main(df, countries):
 
     elif choice == "Per Country Analysis":
         # Create a row with columns
-        col11, col12 = st.columns(2)
+        col11, col12, col13 = st.columns(3)
         # Place a checkbox in each column
         with col11:
             checkbox11 = st.checkbox("Match details")
         with col12:
-            checkbox12 = st.checkbox("Graphic", value=True)
+            checkbox12 = st.checkbox("Tree", value=True)
+        with col13:
+            checkbox13 = st.checkbox("Difference", value=True)
         # Dropdown for country selection
         index_to_preselect = get_index_for_preselection(countries, 'Ind')
         selected_country = st.selectbox('Choose a country:', countries,index=index_to_preselect)
@@ -67,6 +69,8 @@ def main(df, countries):
         if checkbox12:
             st.write('Who beat whom')
             plot_country_graph(selected_country, country_specific_df, countries)
+        if checkbox13:
+            st.write('How were they beaten')
             plot_country_barchart(df, selected_country)
         
     # Compute matrix
