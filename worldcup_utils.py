@@ -191,12 +191,12 @@ def get_victory_margin(data, team1, team2):
     
     if match_data['Result'] == team1:
         if match_data['Bat1'] == team1:
-            return f"{match_data['Target'] - match_data['Runs2']} runs"
+            return f"{match_data['Target'] - match_data['Runs2'] - 1} runs"
         else:
             return f"{10 - match_data['wickets2']} wkts"
     elif match_data['Result'] == team2:
         if match_data['Bat1'] == team2:
-            return f"{match_data['Target'] - match_data['Runs2']} runs"
+            return f"{match_data['Target'] - match_data['Runs2'] - 1} runs"
         else:
             return f"{10 - match_data['wickets2']} wkts"
     else:
