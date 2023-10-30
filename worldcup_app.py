@@ -1,7 +1,7 @@
 import streamlit as st
 from worldcup_utils import (load_data, plot_matrix_chart, generate_match_results,
                             order_teams_by_points_and_nrr, get_index_for_preselection,
-                            calculate_points, calculate_nrr, 
+                            calculate_points, calculate_nrr, country_winloss,
                             generate_results_matrix, generate_standings_and_plot,
                             get_country_details,plot_country_barchart,
                             get_country_data, plot_country_graph, 
@@ -51,7 +51,7 @@ def main(df, countries):
 
     elif choice == "Per Country Analysis":
         # Create a row with columns
-        col11, col12, col13 = st.columns(3)
+        col11, col12, col13, col14 = st.columns(4)
         # Place a checkbox in each column
         with col11:
             checkbox11 = st.checkbox("Match details")
@@ -59,6 +59,8 @@ def main(df, countries):
             checkbox12 = st.checkbox("Tree", value=True)
         with col13:
             checkbox13 = st.checkbox("Difference", value=True)
+        with col14:
+            checkbox14 = st.checkbox("Bat, Win, Toss ...", value=True)
         # Dropdown for country selection
         index_to_preselect = get_index_for_preselection(countries, 'Ind')
         selected_country = st.selectbox('Choose a country:', countries,index=index_to_preselect)
@@ -72,6 +74,9 @@ def main(df, countries):
         if checkbox13:
             st.write('How were they beaten')
             plot_country_barchart(df, selected_country)
+        if checkbox14:
+            st.write('Bat first, toss etc. stats')
+            country_winloss(df, selected_country)
         
     # Compute matrix
 #    team_points, team_nrr = compute_team_metrics(data, countries)
