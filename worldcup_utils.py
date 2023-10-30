@@ -541,3 +541,94 @@ def plot_country_barchart(df, country):
     
     # Assuming we are using Streamlit
     st.pyplot(plt.gcf())
+
+# def country_winloss0(df,country):
+
+#     # Initialize stats
+#     categories = ['Batted First - Won', 'Batted First - Lost', 'Batted Second - Won', 'Batted Second - Lost']
+#     won_toss = [0, 0, 0, 0]
+#     lost_toss = [0, 0, 0, 0]
+    
+#     for _, row in df.iterrows():
+#         if row['Bat1'] == country:
+#             if row['Result'] == country:
+#                 if row['Toss'] == country:
+#                     won_toss[0] += 1
+#                 else:
+#                     lost_toss[0] += 1
+#             else:
+#                 if row['Toss'] == country:
+#                     won_toss[1] += 1
+#                 else:
+#                     lost_toss[1] += 1
+#         elif row['Bat2'] == country:
+#             if row['Result'] == country:
+#                 if row['Toss'] == country:
+#                     won_toss[2] += 1
+#                 else:
+#                     lost_toss[2] += 1
+#             else:
+#                 if row['Toss'] == country:
+#                     won_toss[3] += 1
+#                 else:
+#                     lost_toss[3] += 1
+
+#     # Plotting
+#     barWidth = 0.3
+#     r1 = np.arange(len(won_toss))
+#     r2 = [x + barWidth for x in r1]
+
+#     fig, ax = plt.subplots(figsize=(12,7))
+#     ax.bar(r1, won_toss, color='blue', width=barWidth, label='Won Toss')
+#     ax.bar(r2, lost_toss, color='red', width=barWidth, label='Lost Toss')
+
+#     # Formatting
+#     ax.set_ylabel('Number of Matches')
+#     ax.set_title(f'Match Outcomes for {country} (Toss Win/Loss Split)')
+#     ax.set_xticks([r + barWidth for r in range(len(won_toss))])
+#     ax.set_xticklabels(categories)
+#     ax.legend()
+
+#     plt.tight_layout()
+#     st.pyplot(fig)
+
+def country_winloss(df, country):
+    
+    # Initialize stats
+    categories = ['Batted First - Won', 'Batted First - Lost', 'Batted Second - Won', 'Batted Second - Lost']
+    data = np.zeros((2,4))
+    
+    for _, row in df.iterrows():
+        if row['Bat1'] == country:
+            if row['Result'] == country:
+                if row['Toss'] == country:
+                    data[0,0] += 1
+                else:
+                    data[1,0] += 1
+            else:
+                if row['Toss'] == country:
+                    data[0,1] += 1
+                else:
+                    data[1,1] += 1
+        elif row['Bat2'] == country:
+            if row['Result'] == country:
+                if row['Toss'] == country:
+                    data[0,2] += 1
+                else:
+                    data[1,2] += 1
+            else:
+                if row['Toss'] == country:
+                    data[0,3] += 1
+                else:
+                    data[1,3] += 1
+
+    # Plotting
+    fig, ax = plt.subplots(figsize=(10,6))
+    sns.heatmap(data, annot=True, fmt='g', cmap='Blues', cbar=False, ax=ax, xticklabels=categories, yticklabels=['Won Toss', 'Lost Toss'])
+    
+    # Formatting
+    ax.set_title(f'Match Outcomes for {country} (Toss Win/Loss)')
+    plt.yticks(rotation=0)
+    plt.xticks(rotation=45, ha='right')
+    
+    st.pyplot(fig)
