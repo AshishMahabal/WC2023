@@ -632,3 +632,38 @@ def country_winloss(df, country):
     plt.xticks(rotation=45, ha='right')
     
     st.pyplot(fig)
+
+def ground_stats(df):
+    # Initialize lists to store results
+    grounds = df['Ground'].unique()
+    defended = []  # number of victories when batting first
+    chased = []    # number of losses when batting first
+
+    # Populate the lists
+    for ground in grounds:
+        ground_matches = df[df['Ground'] == ground]
+        bat_first_win = len(ground_matches[(ground_matches['Bat1'] == ground_matches['Result'])])
+        bat_first_lose = len(ground_matches[(ground_matches['Bat2'] == ground_matches['Result'])])
+        defended.append(bat_first_win)
+        chased.append(bat_first_lose)
+
+    # Plotting
+    fig, ax = plt.subplots(figsize=(12, 6))
+    
+    # Using bottom parameter of bar function to stack 'chased' on top of 'defended'
+    ax.bar(grounds, defended, color='blue', label='Defended (Won batting first)')
+    ax.bar(grounds, chased, bottom=defended, color='red', label='Chased (Lost batting first)')
+
+    ax.set_ylabel('Number of Matches')
+    ax.set_xlabel('Ground')
+    ax.set_title('Performance by Ground when Batting First')
+    ax.legend(loc='upper right')
+    ax.set_xticks(grounds)
+    ax.set_xticklabels(grounds, rotation=45, ha='right')
+    ax.yaxis.set_major_locator(plt.MaxNLocator(integer=True))
+    
+    # Adjust layout for better display
+    plt.tight_layout()
+
+    # Assuming we are using Streamlit
+    st.pyplot(fig)
