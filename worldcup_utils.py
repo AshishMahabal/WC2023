@@ -277,15 +277,15 @@ def add_line(result, ax, countries, angles):
     else:
         line_color = 'blue' if winner == countries[winner_index] else 'red'
 
-    ax.plot([winner_x, midpoint_x], [winner_y, midpoint_y], color=line_color, linewidth=2)
-    ax.plot([midpoint_x, loser_x], [midpoint_y, loser_y], color='red', linewidth=2)
+    ax.plot([winner_x, midpoint_x], [winner_y, midpoint_y], color='blue', linewidth=2)
+    ax.plot([midpoint_x, loser_x], [midpoint_y, loser_y], color='red', linewidth=4)
     #print(result, winner_x, midpoint_x, loser_x, winner_y, midpoint_y, loser_y)
     print(winner, countries[winner_index])
 
     # Add arrow at the midpoint
     if line_color == 'blue':
         arrowprops = dict(arrowstyle='<|-', color='blue', lw=2)
-        ax.annotate('', xy=(midpoint_x, midpoint_y), xytext=(loser_x, loser_y), arrowprops=arrowprops)
+        #ax.annotate('', xy=(midpoint_x, midpoint_y), xytext=(loser_x, loser_y), arrowprops=arrowprops)
 
 def plot_decagon(df):
     countries = ["Aus", "Eng", "SA", "NZ", "Pak", "Ind", "SL", "Ban", "Afg", "Ned"]
