@@ -72,6 +72,7 @@ def main(df, countries):
 
         if checkbox3:
             st.write('Head to Head')
+            st.write('Pak/NZ NRR off by 0.2 - need to incorporate DL (same with victory margin)')
             plot_matrix_chart(results_matrix, sorted_countries, team_points, team_nrr, df)
 
         # Show Raw Data
