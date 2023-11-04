@@ -9,6 +9,7 @@ from matplotlib.colors import LinearSegmentedColormap
 import seaborn as sns
 import networkx as nx
 import matplotlib.patches as mpatches
+from matplotlib.ticker import MaxNLocator
 
 # ... All your previously discussed functions go here ...
 
@@ -667,3 +668,47 @@ def ground_stats(df):
 
     # Assuming we are using Streamlit
     st.pyplot(fig)
+
+def toss_decision_outcome(df):
+    # Filtering out data where toss decision is to bat
+    toss_bat = df[df['Choice'] == 'Bat']
+    
+    # Counting wins after deciding to bat
+    wins_when_batting_first = toss_bat['Toss'] == toss_bat['Result']
+    
+    # Counting wins after winning toss and deciding to field
+    toss_field = df[df['Choice'] == 'Field']
+    wins_when_fielding_first = toss_field['Toss'] == toss_field['Result']
+    
+    # Preparing data for visualization
+    decision_outcomes = pd.DataFrame({
+        'Decision': ['Bat', 'Field'],
+        'Wins': [
+            wins_when_batting_first.sum(),
+            wins_when_fielding_first.sum()
+        ],
+        'Losses': [
+            (wins_when_batting_first == False).sum(),
+            (wins_when_fielding_first == False).sum()
+        ]
+    })
+    
+    # Plotting
+    fig, ax = plt.subplots(figsize=(10, 6))
+    
+    decision_outcomes.set_index('Decision').plot(kind='bar', stacked=True, color=['green', 'red'], ax=ax)
+    
+    ax.set_ylabel('Number of Matches')
+    ax.set_title('Match Outcomes Based on Toss Decisions')
+    
+    # Set y-axis major locator to MaxNLocator with integer argument
+    ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+
+    # Adding the counts on the bars
+    for p in ax.patches:
+        ax.annotate(str(p.get_height()), (p.get_x() * 1.005, p.get_height() * 1.005))
+    
+    # Assuming we are using Streamlit
+    st.pyplot(fig)
+
+    return decision_outcomes

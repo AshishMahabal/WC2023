@@ -6,7 +6,7 @@ from worldcup_utils import (load_data, plot_matrix_chart, generate_match_results
                             get_country_details,plot_country_barchart,
                             get_country_data, plot_country_graph, 
                             get_victory_margin,add_line, plot_decagon,
-                            ground_stats)
+                            ground_stats, toss_decision_outcome)
 
 def main(df, countries):
     st.title('World Cup 2023 Results')
@@ -47,7 +47,7 @@ def main(df, countries):
         st.write("Overall statistics go here.")
 
         # Create a row with three columns
-        col1, col2, col3, col4, col5 = st.columns(5)
+        col1, col2, col3, col4, col5, col6 = st.columns(6)
         # Place a checkbox in each column
         with col1:
             checkbox1 = st.checkbox("Standings and Victories", value=True)
@@ -58,7 +58,9 @@ def main(df, countries):
         with col4:
             checkbox4 = st.checkbox("Per match details")
         with col5:
-            checkbox5 = st.checkbox("Per ground details")
+            checkbox5 = st.checkbox("Based on Toss")
+        with col6:
+            checkbox6 = st.checkbox("Per ground details")
 
         if checkbox1:
             st.write('Who beat whom')
@@ -78,6 +80,10 @@ def main(df, countries):
             st.write(df)
 
         if checkbox5:
+            st.write('Based on Toss')
+            toss_decision_outcome(df)
+
+        if checkbox6:
             st.write('Per ground stats')
             ground_stats(df)
 
