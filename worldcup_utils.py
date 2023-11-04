@@ -190,6 +190,10 @@ def get_victory_margin(data, team1, team2):
     
     match_data = match_data.iloc[0]  # Assume only one match for now between the two teams
     
+    # Fixed margin for matched involving DLS
+    if 'runs' in str(match_data['DLS']):
+        return match_data['DLS']
+    
     if match_data['Result'] == team1:
         if match_data['Bat1'] == team1:
             return f"{match_data['Target'] - match_data['Runs2'] - 1} runs"

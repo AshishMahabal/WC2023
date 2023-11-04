@@ -1,4 +1,4 @@
-Toss,Choice,Bat1,Runs1,Overs1,wickets1,maxovers1,Target,Bat2,Runs2,Overs2,wickets2,maxovers2,Result,Ground,DL
+Toss,Choice,Bat1,Runs1,Overs1,wickets1,maxovers1,Target,Bat2,Runs2,Overs2,wickets2,maxovers2,Result,Ground,DLS
 NZ,Field,Eng,282,50,9,50,283,NZ,283,36.2,1,50,NZ,Ahmedabad,
 Ned,Field,Pak,286,50,10,50,287,Ned,205,41,10,50,Pak,Hyderabad,
 Ban,Field,Afg,156,50,10,50,157,Ban,158,34.4,4,50,Ban,Dharamsala,
@@ -33,5 +33,5 @@ Ban,Bat,Ban,204,50,10,50,205,Pak,205,32.3,3,50,Pak,Kolkata,
 NZ,Field,SA,357,50,4,50,358,NZ,167,50,10,50,SA,Pune,
 SL,Field,Ind,357,50,8,50,358,SL,55,50,10,50,Ind,Mumbai,
 Ned,Bat,Ned,179,50,10,50,180,Afg,181,31.3,3,50,Afg,Lucknow,
-Pak,Field,NZ,401,50,6,50,402,Pak,200,25.3,1,25.3,Pak,Bengaluru,21
+Pak,Field,NZ,401,50,6,50,402,Pak,200,25.3,1,25.3,Pak,Bengaluru,21 runs
 Eng,Field,Aus,286,50,10,50,287,Eng,253,50,10,50,Aus,Ahmedabad,
