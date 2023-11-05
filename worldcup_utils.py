@@ -47,11 +47,23 @@ def calculate_nrr(df, countries):
         bat1 = row['Bat1']
         bat2 = row['Bat2']
 
+        if 'runs' in str(row['DLS']):
+            sup = int(row['DLS'].split()[0])
+        else:
+            sup = 0
+
         runs_scored1 = row['Runs1']
         overs_batted1 = convert_overs(row['Overs1'] if row['wickets1'] < 10 else row['maxovers1'])
         
         runs_scored2 = row['Runs2']
         overs_batted2 = convert_overs(row['Overs2'] if row['wickets2'] < 10 else row['maxovers2'])
+
+        # if 'runs' in str(row['DLS']):
+        #     st.write(runs_scored1, overs_batted1, runs_scored2, overs_batted2)
+        
+        # The following is totallly random. And just for team2 winning by DLS
+        if row['Result'] == bat2:
+            runs_scored1 = runs_scored1 - sup*3.77
 
         # Update the total runs scored and overs batted for both teams
         total_runs_scored[bat1] = total_runs_scored.get(bat1, 0) + runs_scored1
@@ -136,7 +148,7 @@ def generate_standings_and_plot(df):
     # Get the points, NRR, and matches played for each country
     points_dict = calculate_points(df, countries)
     nrr_dict = calculate_nrr(df, countries)
-    print(nrr_dict)
+    #print(nrr_dict)
     matches_played_dict = get_matches_played(df)
     print(matches_played_dict)
 
