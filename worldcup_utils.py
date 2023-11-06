@@ -245,7 +245,7 @@ def plot_matrix_chart(matrix, countries, team_points, nrr, data):
                 if i < 4:
                     cell_color = "blue"
                     color = "white"
-                elif i < 7:
+                elif i < 6:
                     cell_color = "yellow"
                     color = "black"  # Adjust text color for better visibility on yellow
                 else:
@@ -295,7 +295,7 @@ def add_line(result, ax, countries, angles):
         line_color = 'blue' if winner == countries[winner_index] else 'red'
 
     ax.plot([winner_x, midpoint_x], [winner_y, midpoint_y], color='blue', linewidth=2)
-    ax.plot([midpoint_x, loser_x], [midpoint_y, loser_y], color='red', linewidth=4)
+    ax.plot([midpoint_x, loser_x], [midpoint_y, loser_y], color='red', linewidth=2)
     #print(result, winner_x, midpoint_x, loser_x, winner_y, midpoint_y, loser_y)
     print(winner, countries[winner_index])
 
@@ -330,8 +330,8 @@ def plot_decagon(df):
 
     # Split countries into top, middle, and bottom based on points
     top_countries = sorted_countries[:4]
-    middle_countries = sorted_countries[4:7]
-    bottom_countries = sorted_countries[7:]
+    middle_countries = sorted_countries[4:6]
+    bottom_countries = sorted_countries[6:]
 
     # Create a 10-sided polygon to represent countries
     num_countries = len(countries)
