@@ -715,7 +715,7 @@ def toss_decision_outcome(df):
     decision_outcomes.set_index('Decision').plot(kind='bar', stacked=True, color=['green', 'red'], ax=ax)
     
     ax.set_ylabel('Number of Matches')
-    ax.set_title('Match Outcomes Based on Toss Decisions')
+    ax.set_title('Match Outcomes Following Bat/Field Decisions')
     
     # Set y-axis major locator to MaxNLocator with integer argument
     ax.yaxis.set_major_locator(MaxNLocator(integer=True))

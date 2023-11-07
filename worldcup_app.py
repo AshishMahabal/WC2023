@@ -140,7 +140,7 @@ def main(df, countries):
     st.write("**Source Code:** [GitHub Repo](https://github.com/AshishMahabal/WC2023) PRs welcome.")
 
     # Version
-    st.write("**Version:** 0.0.1")
+    st.write("**Version:** 0.1")
 
     # Disclaimer
     st.write("### Disclaimer")
