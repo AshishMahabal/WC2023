@@ -421,6 +421,7 @@ def plot_country_graph(country, df, countries):
 
     edge_colors = ['gray' if G[u][v][0].get('relation') != "draw" else 'orange' for u, v in G.edges()]
 
+    plt.figure()
     nx.draw(G, pos, with_labels=True, node_size=3000, node_color=color_map, font_size=15, width=3, edge_color=edge_colors, arrowsize=20, font_color='white')
     plt.title(f"Matches involving {country}\n")
     

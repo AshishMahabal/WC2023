@@ -97,9 +97,9 @@ def main(df, countries):
         with col11:
             checkbox11 = st.checkbox("Match details")
         with col12:
-            checkbox12 = st.checkbox("Tree", value=True)
+            checkbox12 = st.checkbox("Difference", value=True)
         with col13:
-            checkbox13 = st.checkbox("Difference", value=True)
+            checkbox13 = st.checkbox("Tree", value=True)
         with col14:
             checkbox14 = st.checkbox("Bat, Win, Toss ...", value=True)
         # Dropdown for country selection
@@ -110,11 +110,11 @@ def main(df, countries):
             st.write('All the rows')
             st.write(country_specific_df)
         if checkbox12:
-            st.write('Who beat whom')
-            plot_country_graph(selected_country, country_specific_df, countries)
-        if checkbox13:
             st.write('How were they beaten')
             plot_country_barchart(df, selected_country)
+        if checkbox13:
+            st.write('Who beat whom')
+            plot_country_graph(selected_country, country_specific_df, countries)
         if checkbox14:
             st.write('Bat first, toss etc. stats')
             country_winloss(df, selected_country)
