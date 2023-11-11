@@ -6,6 +6,7 @@ from worldcup_utils import (load_data, plot_matrix_chart, generate_match_results
                             generate_results_matrix, generate_standings_and_plot,
                             get_country_details,plot_country_barchart,
                             get_country_data, plot_country_graph, 
+                            plot_country_barchart_ordered,
                             get_victory_margin,add_line, plot_decagon,
                             ground_stats, toss_decision_outcome)
 
@@ -92,7 +93,7 @@ def main(df, countries):
 
     elif choice == "Per Country Analysis":
         # Create a row with columns
-        col11, col12, col13, col14 = st.columns(4)
+        col11, col12, col13, col14, col15 = st.columns(5)
         # Place a checkbox in each column
         with col11:
             checkbox11 = st.checkbox("Match details")
@@ -102,6 +103,8 @@ def main(df, countries):
             checkbox13 = st.checkbox("Tree", value=True)
         with col14:
             checkbox14 = st.checkbox("Bat, Win, Toss ...", value=True)
+        with col15:
+            checkbox15 = st.checkbox("Runs histogram", value=True)
         # Dropdown for country selection
         index_to_preselect = get_index_for_preselection(countries, 'Ind')
         selected_country = st.selectbox('Choose a country:', countries,index=index_to_preselect)
@@ -118,6 +121,9 @@ def main(df, countries):
         if checkbox14:
             st.write('Bat first, toss etc. stats')
             country_winloss(df, selected_country)
+        if checkbox15:
+            st.write('Runs histogram')
+            plot_country_barchart_ordered(df, selected_country)
         
     # Compute matrix
 #    team_points, team_nrr = compute_team_metrics(data, countries)

@@ -560,6 +560,111 @@ def plot_country_barchart(df, country):
     # Assuming we are using Streamlit
     st.pyplot(plt.gcf())
 
+def plot_country_barchart_ordered(df, country):
+    matches_first = []
+    runs_country_first = []
+    runs_opponent_first = []
+    wickets_opponent_first = []
+    wickets_country_first = []
+
+    matches_second = []
+    runs_country_second = []
+    runs_opponent_second = []
+    wickets_opponent_second = []
+    wickets_country_second = []
+
+    for _, row in df.iterrows():
+        if country in [row['Bat1'], row['Bat2']]:
+            match = f"{row['Bat1']} vs {row['Bat2']}"
+            if row['Bat1'] == country:
+                matches_first.append(match)
+                runs_country_first.append(row['Runs1'])
+                runs_opponent_first.append(row['Runs2'])
+                wickets_country_first.append(row['wickets1'])
+                wickets_opponent_first.append(row['wickets2'])
+            else:
+                matches_second.append(match)
+                runs_country_second.append(row['Runs2'])
+                runs_opponent_second.append(row['Runs1'])
+                wickets_country_second.append(row['wickets2'])
+                wickets_opponent_second.append(row['wickets1'])
+
+    # Sort matches based on runs of the country
+    sorted_indices_first = sorted(range(len(runs_country_first)), key=lambda i: runs_country_first[i], reverse=True)
+    matches_first_sorted = [matches_first[i] for i in sorted_indices_first]
+    runs_country_first_sorted = [runs_country_first[i] for i in sorted_indices_first]
+    runs_opponent_first_sorted = [runs_opponent_first[i] for i in sorted_indices_first]
+    wickets_country_first_sorted = [wickets_country_first[i] for i in sorted_indices_first]
+    wickets_opponent_first_sorted = [wickets_opponent_first[i] for i in sorted_indices_first]
+
+    sorted_indices_second = sorted(range(len(runs_country_second)), key=lambda i: runs_country_second[i], reverse=True)
+    matches_second_sorted = [matches_second[i] for i in sorted_indices_second]
+    runs_country_second_sorted = [runs_country_second[i] for i in sorted_indices_second]
+    runs_opponent_second_sorted = [runs_opponent_second[i] for i in sorted_indices_second]
+    wickets_country_second_sorted = [wickets_country_second[i] for i in sorted_indices_second]
+    wickets_opponent_second_sorted = [wickets_opponent_second[i] for i in sorted_indices_second]
+
+    max_runs = max(max(runs_country_first_sorted), max(runs_country_second_sorted))
+    max_runs_rounded = ((max_runs + 49) // 50) * 50
+
+    desired_y_ticks = list(range(0, max_runs_rounded + 1, 50))
+
+    # Create subplots for matches where the country played first
+    fig, axes = plt.subplots(1, 2, figsize=(16, 6))
+
+    # Function to divide bars by wickets
+    def divide_bars_by_wickets(ax, bars, wickets):
+        for bar, wicket in zip(bars, wickets):
+            h = bar.get_height()
+            segments = h / wicket if wicket != 0 else h
+            for i in range(1, wicket):
+                ax.plot([bar.get_x(), bar.get_x() + bar.get_width()],
+                         [segments * i, segments * i], color="white")
+
+    # Bar plots for matches where the country played first
+    ax1 = axes[0]
+    index_first = np.arange(len(matches_first_sorted))
+    bar_width = 0.35
+    bars_country_first = ax1.bar(index_first - bar_width/2, runs_country_first_sorted, bar_width, label=f'{country} Runs', color='blue')
+    bars_opponent_first = ax1.bar(index_first + bar_width/2, runs_opponent_first_sorted, bar_width, label='Opponent Runs', color='red', alpha=0.6)
+    divide_bars_by_wickets(ax1, bars_country_first, wickets_country_first_sorted)
+    divide_bars_by_wickets(ax1, bars_opponent_first, wickets_opponent_first_sorted)
+    ax1.set_xticks(index_first)
+    ax1.set_xticklabels(matches_first_sorted, rotation=45, ha="right", fontsize=12, fontweight='bold')
+    ax1.set_xlabel('Match', fontsize=16, fontweight='bold')
+    ax1.set_ylabel('Runs', fontsize=16, fontweight='bold')
+    ax1.set_yticks(desired_y_ticks)
+    ax1.set_yticklabels(desired_y_ticks, fontsize=12, fontweight='bold')
+    ax1.set_title(f'{country} Runs and Wickets (Batting First)', fontsize=18, fontweight='bold')
+    ax1.set_ylim(0, max_runs + 10)
+    ax1.legend(fontsize=16)
+
+    # Bar plots for matches where the country played second
+    ax2 = axes[1]
+    index_second = np.arange(len(matches_second_sorted))
+    bars_opponent_second = ax2.bar(index_second - bar_width/2, runs_opponent_second_sorted, bar_width, label='Opponent Runs', color='red', alpha=0.6)
+    bars_country_second = ax2.bar(index_second + bar_width/2, runs_country_second_sorted, bar_width, label=f'{country} Runs', color='blue')
+    divide_bars_by_wickets(ax2, bars_opponent_second, wickets_opponent_second_sorted)
+    divide_bars_by_wickets(ax2, bars_country_second, wickets_country_second_sorted)
+    ax2.set_xticks(index_second)
+    ax2.set_xticklabels(matches_second_sorted, rotation=45, ha="right", fontsize=12, fontweight='bold')
+    ax2.set_xlabel('Match', fontsize=16, fontweight='bold')
+    ax2.set_ylabel('Runs', fontsize=16, fontweight='bold')
+    ax2.set_yticks(desired_y_ticks)
+    ax2.set_yticklabels(desired_y_ticks, fontsize=12, fontweight='bold')
+    ax2.set_title(f'{country} Runs and Wickets (Batting Second)', fontsize=18, fontweight='bold')
+    ax2.set_ylim(0, max_runs + 10)
+    ax2.legend(fontsize=16)
+
+    # plt.xlabel('Opponent')
+    # plt.ylabel('Runs')
+    # plt.title(f'{country} Runs by Inning')
+    # plt.legend(['1st Inning', '2nd Inning'])
+
+    plt.tight_layout()
+    st.pyplot(plt.gcf())
+
+
 # def country_winloss0(df,country):
 
 #     # Initialize stats
