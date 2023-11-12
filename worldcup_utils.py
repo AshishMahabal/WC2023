@@ -604,8 +604,9 @@ def plot_country_barchart_ordered(df, country):
     wickets_country_second_sorted = [wickets_country_second[i] for i in sorted_indices_second]
     wickets_opponent_second_sorted = [wickets_opponent_second[i] for i in sorted_indices_second]
 
-    max_runs = max(max(runs_country_first_sorted), max(runs_country_second_sorted))
+    max_runs = max(max(runs_country_first_sorted), max(runs_country_second_sorted),max(runs_opponent_first_sorted),max(runs_opponent_second_sorted))
     max_runs_rounded = ((max_runs + 49) // 50) * 50
+    st.write(max_runs_rounded)
 
     desired_y_ticks = list(range(0, max_runs_rounded + 1, 50))
 
@@ -636,7 +637,7 @@ def plot_country_barchart_ordered(df, country):
     ax1.set_yticks(desired_y_ticks)
     ax1.set_yticklabels(desired_y_ticks, fontsize=12, fontweight='bold')
     ax1.set_title(f'{country} Runs and Wickets (Batting First)', fontsize=18, fontweight='bold')
-    ax1.set_ylim(0, max_runs + 10)
+    ax1.set_ylim(0, max_runs_rounded + 10)
     ax1.legend(fontsize=16)
 
     # Bar plots for matches where the country played second
@@ -653,7 +654,8 @@ def plot_country_barchart_ordered(df, country):
     ax2.set_yticks(desired_y_ticks)
     ax2.set_yticklabels(desired_y_ticks, fontsize=12, fontweight='bold')
     ax2.set_title(f'{country} Runs and Wickets (Batting Second)', fontsize=18, fontweight='bold')
-    ax2.set_ylim(0, max_runs + 10)
+    ax2.set_ylim(0, max_runs_rounded + 10)
+    st.write(max_runs_rounded)
     ax2.legend(fontsize=16)
 
     # plt.xlabel('Opponent')
